@@ -273,7 +273,7 @@ TARGET_BUILD_JAVA_SUPPORT_LEVEL := platform
 
 # -----------------------------------------------------------------
 # The pdk (Platform Development Kit) build
-include build/core/pdk_config.mk
+# include build/core/pdk_config.mk
 
 # -----------------------------------------------------------------
 ###
@@ -482,10 +482,48 @@ ifneq ($(dont_bother),true)
 # Include all of the makefiles in the system
 #
 
-# Can't use first-makefiles-under here because
-# --mindepth=2 makes the prunes not work.
+# This set of mk files is hand picked for hybris.
+
+# Some git repos pulled in from our minimal manifest have multiple
+# Android.mk files; some of them we don't need but they're there and
+# they have dependencies outside the minimal set. This means that we
+# either have to manage patches to the repos to remove them (ugh!) or
+# we simply manage the set of mk files here.
+
+# These are directories we scan for all Android.mk - keeps the
+# manually maintained list below smaller
+subdir_makefile_dirs := bionic bootable build device external hardware hybris libcore system
+
+# Need to skip:
+#  ./frameworks/native/opengl/tests/Android.mk
+#  ./prebuilts/$MANY
+# so for those dirs we explicitly list the Android.mk needed
+# for hybris
+
 subdir_makefiles := \
-	$(shell build/tools/findleaves.py --prune=$(OUT_DIR) --prune=.repo --prune=.git $(subdirs) Android.mk)
+./frameworks/base/Android.mk \
+./frameworks/native/cmds/dumpstate/Android.mk \
+./frameworks/native/cmds/dumpsys/Android.mk \
+./frameworks/native/cmds/sensorservice/Android.mk \
+./frameworks/native/cmds/surfaceflinger/Android.mk \
+./frameworks/native/libs/binder/Android.mk \
+./frameworks/native/libs/cpustats/Android.mk \
+./frameworks/native/libs/gui/Android.mk \
+./frameworks/native/libs/ui/Android.mk \
+./frameworks/native/libs/utils/Android.mk \
+./frameworks/native/opengl/libagl/Android.mk \
+./frameworks/native/opengl/libs/Android.mk \
+./frameworks/native/services/powermanager/Android.mk \
+./frameworks/native/services/sensorservice/Android.mk \
+./frameworks/native/services/surfaceflinger/Android.mk \
+./frameworks/opt/emoji/Android.mk \
+./prebuilts/gcc/darwin-x86/arm/arm-linux-androideabi-4.6/Android.mk \
+./prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/Android.mk \
+./prebuilts/ndk/Android.mk \
+./prebuilts/tools/Android.mk \
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdir_makefile_dirs) Android.mk)
+
+# End of hybris mods
 
 $(foreach mk, $(subdir_makefiles), $(info including $(mk) ...)$(eval include $(mk)))
 
