@@ -492,7 +492,7 @@ ifneq ($(dont_bother),true)
 
 # These are directories we scan for all Android.mk - keeps the
 # manually maintained list below smaller
-subdir_makefile_dirs := bionic bootable build device external hardware hybris libcore system
+subdir_makefile_dirs := bionic bootable build device external hardware hybris libcore system kernel
 
 # Need to skip:
 #  ./frameworks/native/opengl/tests/Android.mk
