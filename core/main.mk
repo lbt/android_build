@@ -492,13 +492,18 @@ ifneq ($(dont_bother),true)
 
 # These are directories we scan for all Android.mk - keeps the
 # manually maintained list below smaller
-subdir_makefile_dirs := bionic bootable build device external hardware hybris libcore system kernel
+subdir_makefile_dirs := bionic bootable build device external hardware libcore system kernel
 
 # Need to skip:
 #  ./frameworks/native/opengl/tests/Android.mk
 #  ./prebuilts/$MANY
 # so for those dirs we explicitly list the Android.mk needed
 # for hybris
+
+# We add the hybris Android.mk files last to allow them to perform overrides
+# Finally look for any override.mk file in the hybris/overrides/ tree
+# This allows repos to deploy to eg: hybris/overrides/kernel/override.mk to change
+# eg: TARGET_KERNEL_CONFIG_OVERRIDES
 
 subdir_makefiles := \
 ./frameworks/base/Android.mk \
@@ -518,7 +523,9 @@ subdir_makefiles := \
 ./prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.6/Android.mk \
 ./prebuilts/ndk/Android.mk \
 ./prebuilts/tools/Android.mk \
-$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdir_makefile_dirs) Android.mk)
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdir_makefile_dirs) Android.mk) \
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git hybris Android.mk) \
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git hybris/overrides overrides.mk)
 
 # End of hybris mods
 
