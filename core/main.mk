@@ -524,7 +524,7 @@ subdir_makefiles := \
 ./prebuilts/ndk/Android.mk \
 ./prebuilts/tools/Android.mk \
 $(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git $(subdir_makefile_dirs) Android.mk) \
-$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git hybris Android.mk) \
+$(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git hybris rpm Android.mk) \
 $(shell build/tools/findleaves.py --prune=out --prune=.repo --prune=.git hybris/overrides overrides.mk)
 
 # End of hybris mods
